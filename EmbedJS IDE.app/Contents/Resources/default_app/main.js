@@ -58,7 +58,7 @@ ipc.on('onAbout', function(event, arg) {
 //Load Event
 ipc.on('onLoad', function(event, arg) {
     console.log(arg);
-    ipc.send("onLoaded","onLoaded");
+    event.sender.send("onLoaded","onLoaded");
 });
 
 //Save Event
