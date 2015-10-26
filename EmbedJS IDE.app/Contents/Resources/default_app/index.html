@@ -64,14 +64,6 @@
         <div class="container">
             <div id="editor"></div>
         <script src="js/editor.js" type="text/javascript" charset="utf-8"></script>
-        <script type="text/javascript">
-        //Editor의 내용이 변경되었을 경우  
-        editor.getSession().on('change', function(e) {
-            if(document.title[0] != '*'){
-                document.title = '*' + document.title;
-            }
-        });
-        </script>
         </div>
         <!-- /.container -->
     </body>
