@@ -45,6 +45,9 @@
                             <button type="button" class="btn btn-info" onclick="onAbout()">About</button>
                         </li>
                         <li>
+                            <button class="btn btn-primary" type="button" onclick="onNew()">NEW</button>
+                        </li>
+                        <li>
                             <button class="btn btn-primary" type="button" onclick="onLoad()">LOAD</button>
                         </li>
                         <li>
@@ -59,23 +62,16 @@
         </nav>
         <!-- Page Content -->
         <div class="container">
-            <div id="editor">// Pin / INPUT / OUTPUT / LOW / HIGH Configure
-var A = 0;
-var B = 1;
-var C = 2;
-var D = 3;
-var E = 4;
-var INPUT = 0;
-var OUTPUT = 1;
-var LOW = 0;
-var HIGH = 1;
-//////////////////////////
-
-//Loop
-while(1){
-
-}</div>
-        <script src="js/editor.js" type="text/javascript" charset="utf-8"></script>  
+            <div id="editor"></div>
+        <script src="js/editor.js" type="text/javascript" charset="utf-8"></script>
+        <script type="text/javascript">
+        //Editor의 내용이 변경되었을 경우  
+        editor.getSession().on('change', function(e) {
+            if(document.title[0] != '*'){
+                document.title = '*' + document.title;
+            }
+        });
+        </script>
         </div>
         <!-- /.container -->
     </body>

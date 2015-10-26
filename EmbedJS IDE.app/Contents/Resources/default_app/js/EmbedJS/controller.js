@@ -1,6 +1,7 @@
 var ipc = require('ipc');
 var filename = null;
 var filepath = null;
+var data = null;
 
 // About Button onClick
 function onAbout() {
@@ -8,14 +9,49 @@ function onAbout() {
     ipc.send('onAbout', null);
 }
 
+
+//NEW Buuton onClick
+function onNew() {
+    if (document.title[0] == '*') {
+        var arg = {
+            'name': filename,
+            'path': filepath,
+            'data': editor.getValue()
+        };
+        ipc.sendSync('onNew', arg);
+        editor.setValue("");
+        filepath = null;
+        filename = null;
+        document.title = "EmbedJS IDE - v0.1";
+    } else {
+        editor.setValue("");
+        filepath = null;
+        filename = null;
+        document.title = "EmbedJS IDE - v0.1";
+    }
+}
 //Load Button onClick
-function onLoad(){
+function onLoad() {
     ipc.send('onLoad', editor.getValue());
 }
 
 //Save Button onClick
 function onSave() {
-    ipc.send('onSave', editor.getValue());
+    if (filename != null && filepath != null) {
+        var arg = {
+            'name': filename,
+            'path': filepath,
+            'data': editor.getValue()
+        };
+        ipc.send('onSave', arg);
+    } else {
+        var arg = {
+            'name': null,
+            'path': null,
+            'data': editor.getValue()
+        }
+        ipc.send('onSave', arg);
+    }
 }
 
 //Upload Button onClick
@@ -24,18 +60,24 @@ function onUpload() {
 }
 
 //Loaded Event 로드가 완료되었을 경우
-ipc.on("onLoaded",function(event,arg){
+ipc.on("onLoaded", function(arg) {
+    filepath = arg.path;
+    filename = arg.name;
+    data = arg.data;
 
-	//Title Name 변경
-	document.title = filename + " -- EmbedJS IDE - v0.1";
+    editor.setValue(data);
+    editor.gotoLine(1);
+    document.title = filepath + " -- EmbedJS IDE - v0.1";
 });
 
 //Save Event 세이브가 완료되었을 경우
-ipc.on("onSaved",function(event,arg){
-
+ipc.on("onSaved", function(arg) {
+    filepath = arg.path;
+    filename = arg.name;
+    document.title = filepath + " -- EmbedJS IDE - v0.1";
 });
 
 //Uploaded Event 업로드가 완료되었을 경우
-ipc.on("onUploaded",function(event,arg){
+ipc.on("onUploaded", function(event, arg) {
 
 });
