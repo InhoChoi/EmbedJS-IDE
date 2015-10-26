@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="kr">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="description" content="">
+        <meta name="author" content="">
+        <title>EmbedJS IDE - v0.1</title>
+        <!-- Bootstrap Core CSS -->
+        <link href="css/bootstrap.min.css" rel="stylesheet">
+        <!-- Custom CSS -->
+        <link href="css/logo-nav.css" rel="stylesheet">
+        <!-- jQuery -->
+        <script src="js/jquery.js"></script>
+        <!-- Bootstrap Core JavaScript -->
+        <script src="js/bootstrap.min.js"></script>
+        <!-- Editor ace JavaScript -->
+        <script src="js/ace/ace.js" type="text/javascript" charset="utf-8"></script>
+        
+        <!-- Controller JavaScript -->
+        <script src="js/EmbedJS/controller.js" type="text/javascript"></script>
+
+        <style type="text/css" media="screen">
+        #editor {
+            position: absolute;
+            top: 65px;
+            right: 0px;
+            bottom: 0;
+            left: 0px;
+        }
+        </style>
+        
+        <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+        <![endif]-->
+    </head>
+    <body>
+        <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+            <div class="container">
+                <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                    <ul class="nav navbar-nav">
+                        <li>
+                            <button type="button" class="btn btn-info" onclick="onAbout()">About</button>
+                        </li>
+                        <li>
+                            <button class="btn btn-primary" type="button" onclick="onLoad()">LOAD</button>
+                        </li>
+                        <li>
+                            <button class="btn btn-primary" type="button" onclick="onSave()">SAVE</button>
+                        </li>
+                        <li>
+                            <button class="btn btn-primary" type="button" onclick="onUpload()">UPLOAD</button>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+        <!-- Page Content -->
+        <div class="container">
+            <div id="editor">// Pin / INPUT / OUTPUT / LOW / HIGH Configure
+var A = 0;
+var B = 1;
+var C = 2;
+var D = 3;
+var E = 4;
+var INPUT = 0;
+var OUTPUT = 1;
+var LOW = 0;
+var HIGH = 1;
+//////////////////////////
+
+//Loop
+while(1){
+
+}</div>
+        <script src="js/editor.js" type="text/javascript" charset="utf-8"></script>  
+        </div>
+        <!-- /.container -->
+    </body>
+</html>
