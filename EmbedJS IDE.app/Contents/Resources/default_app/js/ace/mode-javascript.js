@@ -128,11 +128,11 @@ ace.define("ace/mode/doc_comment_highlight_rules", ["require", "exports", "modul
         o = "[a-zA-Z\\$_\u00a1-\uffff][a-zA-Z\\d\\$_\u00a1-\uffff]*\\b",
         u = function(e) {
             var t = this.createKeywordMapper({
-                    "variable.language": "Array|Boolean|Date|Function|Iterator|Number|Object|RegExp|String|Proxy|Namespace|QName|XML|XMLList|ArrayBuffer|Float32Array|Float64Array|Int16Array|Int32Array|Int8Array|Uint16Array|Uint32Array|Uint8Array|Uint8ClampedArray|Error|EvalError|InternalError|RangeError|ReferenceError|StopIteration|SyntaxError|TypeError|URIError|decodeURI|decodeURIComponent|encodeURI|encodeURIComponent|eval|isFinite|isNaN|parseFloat|parseInt|JSON|Math|this|arguments|prototype|window|document",
-                    keyword: "const|yield|import|get|set|break|case|catch|continue|default|delete|do|else|finally|for|function|if|in|instanceof|new|return|switch|throw|try|typeof|let|var|while|with|debugger|__parent__|__count__|escape|unescape|with|__proto__|class|enum|extends|super|export|implements|private|public|interface|package|protected|static",
-                    "storage.type": "const|let|var|function",
-                    "constant.language": "null|Infinity|NaN|undefined",
-                    "support.function": "alert",
+                    "variable.language": "",
+                    keyword: "break|case|default||else|for|function|if|in|instanceof|new|return|switch|throw|try|typeof|let|var|while",
+                    "storage.type": "var|function",
+                    "constant.language": "null|undefined",
+                    "support.function": "pinMode|digitalWrite|digitalRead|analogRead|analogWrite|Serial3|Serial3.beign|Serial3.print|Serial3.read|",
                     "constant.language.boolean": "true|false"
                 }, "identifier"),
                 n = "case|do|else|finally|in|instanceof|return|throw|try|typeof|yield|void",
