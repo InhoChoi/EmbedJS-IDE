@@ -20,15 +20,16 @@ app.on('window-all-closed', function() {
 app.on('ready', function() {
     // 새로운 브라우저 창을 생성합니다.
     mainWindow = new BrowserWindow({
-        width: 800,
-        height: 600
+        width: 1020,
+        height: 720,
+        fullscreen : false
     });
 
     // 그리고 현재 디렉터리의 index.html을 로드합니다.
     mainWindow.loadUrl('file://' + __dirname + '/index.html');
 
     // 개발자 콘솔을 엽니다.
-    //mainWindow.openDevTools();
+    mainWindow.openDevTools();
 
     // 창이 닫히면 호출됩니다.
     mainWindow.on('closed', function() {
@@ -87,9 +88,7 @@ ipc.on('onLoad', function(event, arg) {
 //Save Event
 ipc.on('onSave', function(event, arg) {
     if (arg.name != null && arg.path != null) {
-        console.log('case : 파일이 이미 저장된경우');
-        var filepath = arg.path;
-        fs.writeFile(arg.path, arg.data, function(err) {
+        ExistedFileWrite(arg, function(err, filepath) {
             if (err) throw err;
             var filename = path.basename(filepath);
             var arg = {
@@ -99,34 +98,50 @@ ipc.on('onSave', function(event, arg) {
             event.sender.send('onSaved', arg);
         });
     } else {
-        console.log('case : 파일이 새롭게 저장된 경우');
-        var filepath = dialog.showSaveDialog({
-            filters: [{
-                name: 'EmbedJS Files',
-                extensions: ['js']
-            }]
+        NoneFileWrite(arg, function(err, filepath) {
+            var filename = path.basename(filepath);
+            var arg = {
+                'name': filename,
+                'path': filepath
+            };
+            event.sender.send('onSaved', arg);
         });
-        if (filepath != undefined) {
-            var data = arg.data;
-            fs.writeFile(filepath, arg.data, function(err) {
-                if (err) throw err;
-                var filename = path.basename(filepath);
-                var arg = {
-                    'name': filename,
-                    'path': filepath,
-                };
-                event.sender.send('onSaved', arg);
-            });
-        }
     }
 });
 
 //Upload Event
 ipc.on('onUpload', function(event, arg) {
-    console.log(arg);
+    if (arg.name != null && arg.path != null) {
+        ExistedFileWrite(arg, function(err, filepath) {
+            if (err) throw err;
+            var filename = path.basename(filepath);
+            var arg = {
+                'name': filename,
+                'path': filepath,
+            };
+            event.sender.send('onSaved', arg);
+
+            // Upload 부분
+            event.sender.send('onUploading',arg);
+        });
+    } else {
+        NoneFileWrite(arg, function(err, filepath) {
+            if (filepath != null) {
+                var filename = path.basename(filepath);
+                var arg = {
+                    'name': filename,
+                    'path': filepath
+                };
+                event.sender.send('onSaved', arg);
+
+                // Upload 부분
+                event.sender.send('onUploading',arg);
+            }
+        });
+    }
 });
 
-//onNew Event
+//onNew event
 ipc.on('onNew', function(event, arg) {
     dialog.showMessageBox({
         type: "question",
@@ -136,30 +151,44 @@ ipc.on('onNew', function(event, arg) {
     }, function(response) {
         if (response == 0) {
             if (arg.name != null && arg.path != null) {
-                var filepath = arg.path;
-                fs.writeFile(arg.path, arg.data, function(err) {
-                    if (err) throw err;
-                    event.returnValue = null;;
+                ExistedFileWrite(arg, function(err) {
+                    event.returnValue = null;
                 });
             } else {
-                var filepath = dialog.showSaveDialog({
-                    filters: [{
-                        name: 'EmbedJS Files',
-                        extensions: ['js']
-                    }]
-                });
-                if (filepath != undefined) {
-                    var data = arg.data;
-                    fs.writeFile(filepath, arg.data, function(err) {
-                        if (err) throw err;
-                        event.returnValue = null;
-                    });
-                } else {
+                NoneFileWrite(arg, function(err) {
                     event.returnValue = null;
-                }
+                });
             }
         } else if (response == 1) {
             event.returnValue = null;
         }
     });
 });
+
+
+//파일이 이미 존재할경우 저장 함수
+function ExistedFileWrite(arg, callback) {
+    var filepath = arg.path;
+    fs.writeFile(filepath, arg.data, function(err) {
+        callback(err, filepath);
+    });
+}
+
+//파일존재하지 않을 경우에의 함수
+function NoneFileWrite(arg, callback) {
+    var filepath = dialog.showSaveDialog({
+        filters: [{
+            name: 'EmbedJS Files',
+            extensions: ['js']
+        }]
+    });
+
+    if (filepath != undefined) {
+        var data = arg.data;
+        fs.writeFile(filepath, arg.data, function(err) {
+            callback(err, filepath);
+        });
+    } else {
+        callback(null, null);
+    }
+}

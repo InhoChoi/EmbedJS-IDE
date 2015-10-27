@@ -3,6 +3,14 @@ var filename = null;
 var filepath = null;
 var data = null;
 
+
+// // buttons
+// var btAbout = document.getElementById("about");
+// var btNew = document.getElementById("new");
+// var btLoad = document.getElementById("load");
+// var btSave = document.getElementById("save");
+// var btUpload = document.getElementById("upload");
+
 // About Button onClick
 function onAbout() {
     console.log("onAbout()");
@@ -56,7 +64,21 @@ function onSave() {
 
 //Upload Button onClick
 function onUpload() {
-    ipc.send('onUpload', editor.getValue());
+    if (filename != null && filepath != null) {
+        var arg = {
+            'name': filename,
+            'path': filepath,
+            'data': editor.getValue()
+        };
+        ipc.send('onUpload', arg);
+    } else {
+        var arg = {
+            'name': null,
+            'path': null,
+            'data': editor.getValue()
+        }
+        ipc.send('onUpload', arg);
+    }
 }
 
 //Loaded Event 로드가 완료되었을 경우
@@ -77,7 +99,14 @@ ipc.on("onSaved", function(arg) {
     document.title = filepath + " -- EmbedJS IDE - v0.1";
 });
 
-//Uploaded Event 업로드가 완료되었을 경우
-ipc.on("onUploaded", function(event, arg) {
+//Uploading Event 업로드 진행중일경우
+ipc.on("onUploading", function(arg) {
+    var btUpload = document.getElementById("upload");
+    btUpload.textContent = "업로드중..";
+});
 
+//Uploaded Event 업로드가 완료되었을 경우
+ipc.on("onUploaded", function(arg) {
+    var btUpload = document.getElementById("upload");
+    btUpload.textContent = "업로드 완료"
 });
