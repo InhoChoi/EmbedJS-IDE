@@ -1,6 +1,7 @@
 // src/main.js
 var app = require('app'); // 어플리케이션 기반을 조작 하는 모듈.
 var BrowserWindow = require('browser-window'); // 네이티브 브라우저 창을 만드는 모듈.
+var upload = require('./writer.js').upload;
 
 // Electron 개발자에게 crash-report를 보냄.
 require('crash-reporter').start();
@@ -22,7 +23,7 @@ app.on('ready', function() {
     mainWindow = new BrowserWindow({
         width: 1020,
         height: 720,
-        fullscreen : false
+        fullscreen: false
     });
 
     // 그리고 현재 디렉터리의 index.html을 로드합니다.
@@ -121,7 +122,10 @@ ipc.on('onUpload', function(event, arg) {
             event.sender.send('onSaved', arg);
 
             // Upload 부분
-            event.sender.send('onUploading',arg);
+            event.sender.send('onUploading', arg);
+            upload(filepath, function(err, result) {
+                event.sender.send('onUploaded', arg);
+            });
         });
     } else {
         NoneFileWrite(arg, function(err, filepath) {
@@ -134,7 +138,10 @@ ipc.on('onUpload', function(event, arg) {
                 event.sender.send('onSaved', arg);
 
                 // Upload 부분
-                event.sender.send('onUploading',arg);
+                event.sender.send('onUploading', arg);
+                upload(filepath, function(err, result) {
+                    event.sender.send('onUploaded', arg);
+                }); 
             }
         });
     }
