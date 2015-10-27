@@ -108,5 +108,8 @@ ipc.on("onUploading", function(arg) {
 //Uploaded Event 업로드가 완료되었을 경우
 ipc.on("onUploaded", function(arg) {
     var btUpload = document.getElementById("upload");
-    btUpload.textContent = "업로드 완료"
+    btUpload.textContent = "업로드 완료";
+    setTimeout(function(){
+        btUpload.textContent = "업로드";
+    },3000);
 });
