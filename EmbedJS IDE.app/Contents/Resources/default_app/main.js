@@ -60,85 +60,85 @@ ipc.on('onAbout', function(event, arg) {
 
 //Load Event
 ipc.on('onLoad', function(event, arg) {
-    var filepath = arg.path;
-    var filename = arg.name;
-    var modified = arg.modified;
+    // var filepath = arg.path;
+    // var filename = arg.name;
+    // var modified = arg.modified;
 
-    if (filepath != null && filename != null && modified == true) {
-        async.series([
+    // if (filepath != null && filename != null && modified == true) {
+    //     async.series([
 
-            function(cb) {
-                ModifiedDialog(function(response) {
-                    if (response == 0) {
-                        ExistedFileWrite(arg, function(err, filepath) {
-                            if (err) throw err;
-                            var filename = path.basename(filepath);
-                            var arg = ArgumentInit(filepath, filename, null, null);
-                            event.sender.send('onSaved', arg);
-                            cb();
-                        });
-                    } else if (response == 1) {
-                        cb();
-                    }
-                });
-            },
-            function(cb) {
-                FileRead(arg, function(err, filepath, data) {
-                    if (err) throw err;
-                    var filename = path.basename(filepath);
-                    var arg = ArgumentInit(filepath, filename, data, null, null);
-                    event.sender.send("onLoaded", arg);
-                    cb();
-                });
-            }
-        ], function done(errors, results) {
+    //         function(cb) {
+    //             ModifiedDialog(function(response) {
+    //                 if (response == 0) {
+    //                     ExistedFileWrite(arg, function(err, filepath) {
+    //                         if (err) throw err;
+    //                         var filename = path.basename(filepath);
+    //                         var arg = ArgumentInit(filepath, filename, null, null);
+    //                         event.sender.send('onSaved', arg);
+    //                         cb();
+    //                     });
+    //                 } else if (response == 1) {
+    //                     cb();
+    //                 }
+    //             });
+    //         },
+    //         function(cb) {
+    //             FileRead(arg, function(err, filepath, data) {
+    //                 if (err) throw err;
+    //                 var filename = path.basename(filepath);
+    //                 var arg = ArgumentInit(filepath, filename, data, null, null);
+    //                 event.sender.send("onLoaded", arg);
+    //                 cb();
+    //             });
+    //         }
+    //     ], function done(errors, results) {
 
-        });
-    } else if (filepath == null && filename == null && modified == true) {
-        async.series([
+    //     });
+    // } else if (filepath == null && filename == null && modified == true) {
+    //     async.series([
 
-            function(cb) {
-                ModifiedDialog(function(response) {
-                    if (response == 0) {
-                        NoneFileWrite(arg, function(err, filepath) {
-                            if (err) throw err;
-                            if (filepath != null) {
-                                var filename = path.basename(filepath);
-                                var arg = ArgumentInit(filepath, filename, null, null);
-                                event.sender.send('onSaved', arg);
-                                cb();
-                            }
-                        });
-                    } else if (response == 1) {
-                        cb();
-                    }
-                });
-            },
-            function(cb) {
-                FileRead(arg, function(err, filepath, data) {
-                    if (err) throw err;
-                    if (filepath != null) {
-                        var filename = path.basename(filepath);
-                        var arg = ArgumentInit(filepath, filename, data, null, null);
-                        event.sender.send("onLoaded", arg);
-                        cb();
-                    }
-                });
-            }
-        ], function done(errors, results) {
+    //         function(cb) {
+    //             ModifiedDialog(function(response) {
+    //                 if (response == 0) {
+    //                     NoneFileWrite(arg, function(err, filepath) {
+    //                         if (err) throw err;
+    //                         if (filepath != null) {
+    //                             var filename = path.basename(filepath);
+    //                             var arg = ArgumentInit(filepath, filename, null, null);
+    //                             event.sender.send('onSaved', arg);
+    //                             cb();
+    //                         }
+    //                     });
+    //                 } else if (response == 1) {
+    //                     cb();
+    //                 }
+    //             });
+    //         },
+    //         function(cb) {
+    //             FileRead(arg, function(err, filepath, data) {
+    //                 if (err) throw err;
+    //                 if (filepath != null) {
+    //                     var filename = path.basename(filepath);
+    //                     var arg = ArgumentInit(filepath, filename, data, null, null);
+    //                     event.sender.send("onLoaded", arg);
+    //                     cb();
+    //                 }
+    //             });
+    //         }
+    //     ], function done(errors, results) {
 
-        });
+    //     });
 
-    } else {
-        FileRead(arg, function(err, filepath, data) {
-            if (err) throw err;
-            if (filepath != null) {
-                var filename = path.basename(filepath);
-                var arg = ArgumentInit(filepath, filename, data, null, null);
-                event.sender.send("onLoaded", arg);
-            }
-        });
-    }
+    // } else {
+    FileRead(arg, function(err, filepath, data) {
+        if (err) throw err;
+        if (filepath != null) {
+            var filename = path.basename(filepath);
+            var arg = ArgumentInit(filepath, filename, data, null, null);
+            event.sender.send("onLoaded", arg);
+        }
+    });
+    // }
 });
 
 //Save Event

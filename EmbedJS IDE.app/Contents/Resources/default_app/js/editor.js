@@ -12,3 +12,33 @@ editor.getSession().on('change', function(e) {
         document.title = '*' + document.title;
     }
 });
+
+//Save Command
+editor.commands.addCommand({
+    name: 'Save',
+    bindKey: {win: 'Ctrl-S',  mac: 'Command-S'},
+    exec: function(editor) {
+    	onSave();
+    },
+    readOnly: true // false if this command should not apply in readOnly mode
+});
+
+//Load Command
+editor.commands.addCommand({
+    name: 'Load',
+    bindKey: {win: 'Ctrl-O',  mac: 'Command-O'},
+    exec: function(editor) {
+    	onLoad();
+    },
+    readOnly: true // false if this command should not apply in readOnly mode
+});
+
+//New Command
+editor.commands.addCommand({
+    name: 'New',
+    bindKey: {win: 'Ctrl-N',  mac: 'Command-N'},
+    exec: function(editor) {
+    	onNew();
+    },
+    readOnly: true // false if this command should not apply in readOnly mode
+});
