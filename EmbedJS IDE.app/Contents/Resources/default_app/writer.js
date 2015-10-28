@@ -3,12 +3,13 @@ var exec = require('child_process').exec,
 var async = require('async');
 var fs = require('fs');
 
+var header = "var PINA = 0;var PINB = 1;var PINC = 2;var PIND = 3;var PINE = 4;var PINF = 5;var INPUT = 0;var OUTPUT = 1;var LOW = 0;var HIGH = 1;";
 function upload(filepath, callback) {
     async.series([
     	//파일 내용 수정 및 저장
         function(cb) {
         	fs.readFile(filepath,function(err,data){
-        		data = data + '\x00\x00\x00\x00';
+        		data = header + data + '\x00\x00\x00\x00';
         		console.log(data);
         		fs.writeFile('/tmp/jstemp',data,function(err){
         			if(err) throw err;
