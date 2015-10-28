@@ -43,22 +43,8 @@ function onNew() {
 }
 //Load Button onClick
 function onLoad() {
-<<<<<<< HEAD
-    var modified = false;
-    if(document.title[0] == '*'){
-        modified = true;
-    }
-    var arg = {
-        'name' : filename,
-        'path' : filepath,
-        'data' : editor.getValue(),
-        'modified' : modified
-    }
-    ipc.send('onLoad', arg);
-=======
     fileContentList[currentFileNumber]=editor.getValue();
     ipc.send('onLoad', editor.getValue());
->>>>>>> bj
 }
 
 //Save Button onClick
