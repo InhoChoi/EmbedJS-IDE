@@ -24,13 +24,14 @@
         }
           
         #helpdiv {
+        border-left: 1px black solid;
+        border-bottom: 1px black solid;
         position : fixed;
         width: 600px;
         height: 600px;
         float: right;
-        padding-left: 21px;
-        margin-top: 80px;
-      
+        margin-top: 115px;
+        background-color: #272727;
         display: none;
         }
         
@@ -42,8 +43,23 @@
          text-decoration-color: white;
         color: white;
         font-style: italic;
+        padding-bottom: 16dp;
         }
             
         #filenamelist{
         padding: 0px;    
         }
+
+        #helpList {
+         padding: 20px;   
+        }
+
+        .helpcontent {
+         display: none;
+         padding 10dp;
+        }
+
+        #filename_1{
+         color: "white";   
+        }
+        
