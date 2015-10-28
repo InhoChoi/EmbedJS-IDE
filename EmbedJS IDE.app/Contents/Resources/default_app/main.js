@@ -1,6 +1,7 @@
 // src/main.js
 var app = require('app'); // 어플리케이션 기반을 조작 하는 모듈.
 var BrowserWindow = require('browser-window'); // 네이티브 브라우저 창을 만드는 모듈.
+var Menu = require("menu");
 
 // Electron 개발자에게 crash-report를 보냄.
 require('crash-reporter').start();
@@ -35,6 +36,54 @@ app.on('ready', function() {
     mainWindow.on('closed', function() {
         mainWindow = null;
     });
+
+    // Create the Application's main menu
+    var template = [{
+        label: "Application",
+        submenu: [{
+            label: "About EmbedJS IDE",
+            selector: "orderFrontStan dardAboutPanel:"
+        }, {
+            type: "separator"
+        }, {
+            label: "Quit",
+            accelerator: "Command+Q",
+            click: function() {
+                app.quit();
+            }
+        }]
+    }, {
+        label: "Edit",
+        submenu: [{
+            label: "Undo",
+            accelerator: "CmdOrCtrl+Z",
+            selector: "undo:"
+        }, {
+            label: "Redo",
+            accelerator: "Shift+CmdOrCtrl+Z",
+            selector: "redo:"
+        }, {
+            type: "separator"
+        }, {
+            label: "Cut",
+            accelerator: "CmdOrCtrl+X",
+            selector: "cut:"
+        }, {
+            label: "Copy",
+            accelerator: "CmdOrCtrl+C",
+            selector: "copy:"
+        }, {
+            label: "Paste",
+            accelerator: "CmdOrCtrl+V",
+            selector: "paste:"
+        }, {
+            label: "Select All",
+            accelerator: "CmdOrCtrl+A",
+            selector: "selectAll:"
+        }]
+    }];
+
+    Menu.setApplicationMenu(Menu.buildFromTemplate(template));
 });
 
 //Main Process <-> Rendered Process IPC

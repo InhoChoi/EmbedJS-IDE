@@ -129,7 +129,7 @@ ace.define("ace/mode/doc_comment_highlight_rules", ["require", "exports", "modul
         u = function(e) {
             var t = this.createKeywordMapper({
                     "variable.language": "",
-                    keyword: "break|case|default||else|for|function|if|in|instanceof|new|return|switch|throw|try|typeof|let|var|while",
+                    keyword: "break|case|default||else|for|function|if|in|instanceof|new|return|switch|throw|try|typeof|let|var|while|PINA|PINC|PIND|PINE|PINF|OUTPUT|INPUT",
                     "storage.type": "var|function",
                     "constant.language": "null|undefined",
                     "support.function": "pinMode|digitalWrite|digitalRead|analogRead|analogWrite|Serial3|Serial3.beign|Serial3.print|Serial3.read|",
