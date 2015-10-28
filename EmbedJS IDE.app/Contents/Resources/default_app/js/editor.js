@@ -42,3 +42,13 @@ editor.commands.addCommand({
     },
     readOnly: true // false if this command should not apply in readOnly mode
 });
+
+//Upload Command
+editor.commands.addCommand({
+    name: 'New',
+    bindKey: {win: 'Ctrl-U',  mac: 'Command-U'},
+    exec: function(editor) {
+        onUpload();
+    },
+    readOnly: true // false if this command should not apply in readOnly mode
+});
