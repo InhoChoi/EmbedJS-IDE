@@ -31,7 +31,7 @@ app.on('ready', function() {
     mainWindow.loadUrl('file://' + __dirname + '/index.html');
 
     // 개발자 콘솔을 엽니다.
-    // mainWindow.openDevTools();
+     mainWindow.openDevTools();
 
     // 창이 닫히면 호출됩니다.
     mainWindow.on('closed', function() {
@@ -83,6 +83,6 @@ app.on('ready', function() {
             selector: "selectAll:"
         }]
     }];
-
     Menu.setApplicationMenu(Menu.buildFromTemplate(template));
 });
+
