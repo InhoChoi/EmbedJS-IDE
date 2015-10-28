@@ -1,0 +1,49 @@
+ #editor {
+            position: absolute;
+            top: 115px;
+            right: 0px;
+            bottom: 0;
+            left: 0px;
+        }
+            
+        #bs-example-navbar-collapse-1 {
+        padding: 0px;
+        margin-left: 0px;
+        float: left;
+        }
+            
+        #bs-example-navbar-collapse-2 {
+        padding: 0px;
+        margin-left: 0px;
+        float: right;
+        }
+            
+        #container {
+        padding: 0px;
+        float: left;
+        }
+          
+        #helpdiv {
+        position : fixed;
+        width: 600px;
+        height: 600px;
+        float: right;
+        padding-left: 21px;
+        margin-top: 80px;
+      
+        display: none;
+        }
+        
+        #helpbtn {
+         position: fixed;
+        }
+            
+        .helptext {
+         text-decoration-color: white;
+        color: white;
+        font-style: italic;
+        }
+            
+        #filenamelist{
+        padding: 0px;    
+        }
