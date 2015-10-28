@@ -1,7 +1,6 @@
 // src/main.js
 var app = require('app'); // 어플리케이션 기반을 조작 하는 모듈.
 var BrowserWindow = require('browser-window'); // 네이티브 브라우저 창을 만드는 모듈.
-var upload = require('./writer.js').upload;
 
 // Electron 개발자에게 crash-report를 보냄.
 require('crash-reporter').start();
@@ -44,45 +43,28 @@ var dialog = require('dialog');
 var path = require('path');
 var fs = require('fs');
 
+//Board Upload
+var upload = require('./writer.js').upload;
+
 //About Event
 ipc.on('onAbout', function(event, arg) {
-    if (aboutWindow == null) {
-        aboutWindow = new BrowserWindow({
-            width: 400,
-            height: 300
-        });
-        aboutWindow.loadUrl('file://' + __dirname + '/about.html');
-
-        aboutWindow.on('closed', function() {
-            aboutWindow = null;
-        });
-    }
+    dialog.showMessageBox({
+        type: "info",
+        title: "About",
+        message: "EmbedJS version 0.1",
+        detail: "SW Maestro 6기 2차 프로젝트\n최인호 안영샘 김범준",
+        buttons: ['close', 'Homepage']
+    }, function(response) {});
 });
 
 //Load Event
 ipc.on('onLoad', function(event, arg) {
-    var filepath = null;
-    var filename = null;
-    filepath = dialog.showOpenDialog({
-        properties: ['openFile'],
-        filters: [{
-            name: 'EmbedJS Files',
-            extensions: ['js']
-        }]
+    FileRead(arg,function(err,filepath,data){
+        if(err) throw err;
+        var filename = path.basename(filepath);
+        var arg = ArgumentInit(filepath,filename,data);
+        event.sender.send("onLoaded",arg);
     });
-    if (filepath != undefined) {
-        filename = path.basename(filepath[0]);
-        fs.readFile(filepath[0], 'utf8', function(err, data) {
-            if (err) throw err;
-            var arg = {
-                'name': filename,
-                'path': filepath[0],
-                'data': data
-            };
-            console.log(arg);
-            event.sender.send("onLoaded", arg);
-        });
-    }
 });
 
 //Save Event
@@ -91,19 +73,14 @@ ipc.on('onSave', function(event, arg) {
         ExistedFileWrite(arg, function(err, filepath) {
             if (err) throw err;
             var filename = path.basename(filepath);
-            var arg = {
-                'name': filename,
-                'path': filepath,
-            };
+            var arg = ArgumentInit(filepath,filename,null);
             event.sender.send('onSaved', arg);
         });
     } else {
         NoneFileWrite(arg, function(err, filepath) {
+            if (err) throw err;
             var filename = path.basename(filepath);
-            var arg = {
-                'name': filename,
-                'path': filepath
-            };
+            var arg = ArgumentInit(filepath,filename,null);
             event.sender.send('onSaved', arg);
         });
     }
@@ -115,14 +92,13 @@ ipc.on('onUpload', function(event, arg) {
         ExistedFileWrite(arg, function(err, filepath) {
             if (err) throw err;
             var filename = path.basename(filepath);
-            var arg = {
-                'name': filename,
-                'path': filepath,
-            };
+            var arg = ArgumentInit(filepath,filename,null);
+
             event.sender.send('onSaved', arg);
 
             // Upload 부분
             event.sender.send('onUploading', arg);
+
             upload(filepath, function(err, result) {
                 event.sender.send('onUploaded', arg);
             });
@@ -131,17 +107,15 @@ ipc.on('onUpload', function(event, arg) {
         NoneFileWrite(arg, function(err, filepath) {
             if (filepath != null) {
                 var filename = path.basename(filepath);
-                var arg = {
-                    'name': filename,
-                    'path': filepath
-                };
+                var arg = ArgumentInit(filepath,filename,null); 
                 event.sender.send('onSaved', arg);
 
                 // Upload 부분
                 event.sender.send('onUploading', arg);
+
                 upload(filepath, function(err, result) {
                     event.sender.send('onUploaded', arg);
-                }); 
+                });
             }
         });
     }
@@ -171,6 +145,22 @@ ipc.on('onNew', function(event, arg) {
     });
 });
 
+//존재하는 파일 Read
+function FileRead(arg, callback) {
+    var filename = null;
+    var filepath = dialog.showOpenDialog({
+        properties: ['openFile'],
+        filters: [{
+            name: 'EmbedJS Files',
+            extensions: ['js']
+        }]
+    });
+    if (filepath != undefined) {
+        fs.readFile(filepath[0], 'utf8', function(err, data) {
+            callback(err,filepath[0],data);
+        });
+    }
+}
 
 //파일이 이미 존재할경우 저장 함수
 function ExistedFileWrite(arg, callback) {
@@ -197,4 +187,13 @@ function NoneFileWrite(arg, callback) {
     } else {
         callback(null, null);
     }
+}
+
+function ArgumentInit(filepath,filename,data){
+    var arg = {
+        'name' : filename,
+        'path' : filepath,
+        'data' : data
+    };
+    return arg;
 }

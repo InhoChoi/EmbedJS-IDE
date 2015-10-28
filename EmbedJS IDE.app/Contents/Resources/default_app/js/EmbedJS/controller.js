@@ -30,12 +30,12 @@ function onNew() {
         editor.setValue("");
         filepath = null;
         filename = null;
-        document.title = "EmbedJS IDE - v0.1";
+        document.title = "EmbedJS IDE version 0.1";
     } else {
         editor.setValue("");
         filepath = null;
         filename = null;
-        document.title = "EmbedJS IDE - v0.1";
+        document.title = "EmbedJS IDE version 0.1";
     }
 }
 //Load Button onClick
@@ -89,14 +89,14 @@ ipc.on("onLoaded", function(arg) {
 
     editor.setValue(data);
     editor.gotoLine(1);
-    document.title = filepath + " -- EmbedJS IDE - v0.1";
+    document.title = filepath + " | EmbedJS IDE version 0.1";
 });
 
 //Save Event 세이브가 완료되었을 경우
 ipc.on("onSaved", function(arg) {
     filepath = arg.path;
     filename = arg.name;
-    document.title = filepath + " -- EmbedJS IDE - v0.1";
+    document.title = filepath + " | EmbedJS IDE version 0.1";
 });
 
 //Uploading Event 업로드 진행중일경우
