@@ -12,25 +12,29 @@ function upload(filepath, callback) {
         		console.log(data);
         		fs.writeFile('/tmp/jstemp',data,function(err){
         			if(err) throw err;
-        			cb(null,null);
+        			cb();
         		})
         	});
+        },
+        //OpenOCD Check
+        function(cb){
+            fs.stat('/usr/local/bin/openocd', function(err, stats){
+                if(err) throw err;
+                cb();
+            });
         },
         //Board 업로드
         function(cb) {
             exec('/usr/local/bin/openocd -f interface/olimex-arm-usb-ocd.cfg -f target/stm32f2x.cfg -c "program /tmp/jstemp 0x080C0000;resume;exit"', function(error, stdout, stderr) {
                 var result = {
-                    'stdout': stdout,
-                    'stderr': stderr,
-                    'error': error
+                    'stdout' : stdout,
+                    'stderr' : stderr,
                 };
-                cb(null, result)
+                cb(error,result);
             });
         }
     ], function done(errors, results) {
-    	console.log(results);
-    	callback(errors,results);
+    	callback(errors,results[2]);
     });
 }
-
 exports.upload = upload;

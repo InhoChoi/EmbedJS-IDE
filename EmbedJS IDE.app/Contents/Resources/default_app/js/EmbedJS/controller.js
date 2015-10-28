@@ -40,7 +40,17 @@ function onNew() {
 }
 //Load Button onClick
 function onLoad() {
-    ipc.send('onLoad', editor.getValue());
+    var modified = false;
+    if(document.title[0] == '*'){
+        modified = true;
+    }
+    var arg = {
+        'name' : filename,
+        'path' : filepath,
+        'data' : editor.getValue(),
+        'modified' : modified
+    }
+    ipc.send('onLoad', arg);
 }
 
 //Save Button onClick

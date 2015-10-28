@@ -42,6 +42,7 @@ var ipc = require('ipc');
 var dialog = require('dialog');
 var path = require('path');
 var fs = require('fs');
+var async = require('async');
 
 //Board Upload
 var upload = require('./writer.js').upload;
@@ -59,12 +60,85 @@ ipc.on('onAbout', function(event, arg) {
 
 //Load Event
 ipc.on('onLoad', function(event, arg) {
-    FileRead(arg,function(err,filepath,data){
-        if(err) throw err;
-        var filename = path.basename(filepath);
-        var arg = ArgumentInit(filepath,filename,data);
-        event.sender.send("onLoaded",arg);
-    });
+    var filepath = arg.path;
+    var filename = arg.name;
+    var modified = arg.modified;
+
+    if (filepath != null && filename != null && modified == true) {
+        async.series([
+
+            function(cb) {
+                ModifiedDialog(function(response) {
+                    if (response == 0) {
+                        ExistedFileWrite(arg, function(err, filepath) {
+                            if (err) throw err;
+                            var filename = path.basename(filepath);
+                            var arg = ArgumentInit(filepath, filename, null, null);
+                            event.sender.send('onSaved', arg);
+                            cb();
+                        });
+                    } else if (response == 1) {
+                        cb();
+                    }
+                });
+            },
+            function(cb) {
+                FileRead(arg, function(err, filepath, data) {
+                    if (err) throw err;
+                    var filename = path.basename(filepath);
+                    var arg = ArgumentInit(filepath, filename, data, null, null);
+                    event.sender.send("onLoaded", arg);
+                    cb();
+                });
+            }
+        ], function done(errors, results) {
+
+        });
+    } else if (filepath == null && filename == null && modified == true) {
+        async.series([
+
+            function(cb) {
+                ModifiedDialog(function(response) {
+                    if (response == 0) {
+                        NoneFileWrite(arg, function(err, filepath) {
+                            if (err) throw err;
+                            if (filepath != null) {
+                                var filename = path.basename(filepath);
+                                var arg = ArgumentInit(filepath, filename, null, null);
+                                event.sender.send('onSaved', arg);
+                                cb();
+                            }
+                        });
+                    } else if (response == 1) {
+                        cb();
+                    }
+                });
+            },
+            function(cb) {
+                FileRead(arg, function(err, filepath, data) {
+                    if (err) throw err;
+                    if (filepath != null) {
+                        var filename = path.basename(filepath);
+                        var arg = ArgumentInit(filepath, filename, data, null, null);
+                        event.sender.send("onLoaded", arg);
+                        cb();
+                    }
+                });
+            }
+        ], function done(errors, results) {
+
+        });
+
+    } else {
+        FileRead(arg, function(err, filepath, data) {
+            if (err) throw err;
+            if (filepath != null) {
+                var filename = path.basename(filepath);
+                var arg = ArgumentInit(filepath, filename, data, null, null);
+                event.sender.send("onLoaded", arg);
+            }
+        });
+    }
 });
 
 //Save Event
@@ -73,15 +147,17 @@ ipc.on('onSave', function(event, arg) {
         ExistedFileWrite(arg, function(err, filepath) {
             if (err) throw err;
             var filename = path.basename(filepath);
-            var arg = ArgumentInit(filepath,filename,null);
+            var arg = ArgumentInit(filepath, filename, null, null);
             event.sender.send('onSaved', arg);
         });
     } else {
         NoneFileWrite(arg, function(err, filepath) {
             if (err) throw err;
-            var filename = path.basename(filepath);
-            var arg = ArgumentInit(filepath,filename,null);
-            event.sender.send('onSaved', arg);
+            if (filepath != null) {
+                var filename = path.basename(filepath);
+                var arg = ArgumentInit(filepath, filename, null, null);
+                event.sender.send('onSaved', arg);
+            }
         });
     }
 });
@@ -92,7 +168,7 @@ ipc.on('onUpload', function(event, arg) {
         ExistedFileWrite(arg, function(err, filepath) {
             if (err) throw err;
             var filename = path.basename(filepath);
-            var arg = ArgumentInit(filepath,filename,null);
+            var arg = ArgumentInit(filepath, filename, null, null);
 
             event.sender.send('onSaved', arg);
 
@@ -100,6 +176,15 @@ ipc.on('onUpload', function(event, arg) {
             event.sender.send('onUploading', arg);
 
             upload(filepath, function(err, result) {
+                if (result['stderr'] != '') {
+                    dialog.showMessageBox({
+                        type: "error",
+                        title: "About",
+                        message: "Error",
+                        detail: result['stderr'],
+                        buttons: ['close']
+                    }, function(response) {});
+                }
                 event.sender.send('onUploaded', arg);
             });
         });
@@ -107,13 +192,22 @@ ipc.on('onUpload', function(event, arg) {
         NoneFileWrite(arg, function(err, filepath) {
             if (filepath != null) {
                 var filename = path.basename(filepath);
-                var arg = ArgumentInit(filepath,filename,null); 
+                var arg = ArgumentInit(filepath, filename, null, null);
                 event.sender.send('onSaved', arg);
 
                 // Upload 부분
                 event.sender.send('onUploading', arg);
 
                 upload(filepath, function(err, result) {
+                    if (result['stderr'] != '') {
+                        dialog.showMessageBox({
+                            type: "error",
+                            title: "About",
+                            message: "Error",
+                            detail: result['stderr'],
+                            buttons: ['close']
+                        }, function(response) {});
+                    }
                     event.sender.send('onUploaded', arg);
                 });
             }
@@ -123,12 +217,7 @@ ipc.on('onUpload', function(event, arg) {
 
 //onNew event
 ipc.on('onNew', function(event, arg) {
-    dialog.showMessageBox({
-        type: "question",
-        title: "Warning",
-        message: "파일이 수정되었습니다. 저장하시겠습니까?",
-        buttons: ['Yes', 'No']
-    }, function(response) {
+    ModifiedDialog(function(response) {
         if (response == 0) {
             if (arg.name != null && arg.path != null) {
                 ExistedFileWrite(arg, function(err) {
@@ -157,7 +246,7 @@ function FileRead(arg, callback) {
     });
     if (filepath != undefined) {
         fs.readFile(filepath[0], 'utf8', function(err, data) {
-            callback(err,filepath[0],data);
+            callback(err, filepath[0], data);
         });
     }
 }
@@ -189,11 +278,24 @@ function NoneFileWrite(arg, callback) {
     }
 }
 
-function ArgumentInit(filepath,filename,data){
+//Main-Process <-> Render-Process 간의 데이터 초기화
+
+function ArgumentInit(filepath, filename, data, modified) {
     var arg = {
-        'name' : filename,
-        'path' : filepath,
-        'data' : data
+        'name': filename,
+        'path': filepath,
+        'data': data,
+        'modified': modified
     };
     return arg;
+}
+
+// 수정이 되었을 경우의 Dialog
+function ModifiedDialog(response) {
+    dialog.showMessageBox({
+        type: "question",
+        title: "Warning",
+        message: "파일이 수정되었습니다. 저장하시겠습니까?",
+        buttons: ['Yes', 'No']
+    }, response);
 }
