@@ -1,66 +1,66 @@
- #editor {
-            position: absolute;
-            top: 115px;
-            right: 0px;
-            bottom: 0;
-            left: 0px;
-        }
-            
-        #bs-example-navbar-collapse-1 {
-        padding: 0px;
-        margin-left: 0px;
-        float: left;
-        }
-            
-        #bs-example-navbar-collapse-2 {
-        padding: 0px;
-        margin-left: 0px;
-        margin-right: 300px;
-        float: right;
-        }
-            
-        #container {
-        padding: 0px;
-        float: left;
-        }
-          
-        #helpdiv {
-        border-left: 1px black solid;
-        border-bottom: 1px black solid;
-        position : fixed;
-        width: 600px;
-        height: 600px;
-        float: right;
-        margin-top: 115px;
-        background-color: #272727;
-        display: none;
-        }
-        
-        #helpbtn {
-         position: fixed;
-        }
-            
-        .helptext {
-         text-decoration-color: white;
-        color: white;
-        font-style: italic;
-        padding-bottom: 16dp;
-        }
-            
-        #filenamelist{
-        padding: 0px;    
-        }
+#editor {
+position: absolute;
+top: 115px;
+right: 0px;
+bottom: 0;
+left: 0px;
+}
 
-        #helpList {
-         padding: 20px;   
-        }
+#bs-example-navbar-collapse-1 {
+padding: 0px;
+margin-left: 0px;
+float: left;
+}
+    
+#bs-example-navbar-collapse-2 {
+padding: 0px;
+margin-left: 0px;
+margin-right: 300px;
+float: right;
+}
+    
+#container {
+padding: 0px;
+float: left;
+}
+  
+#helpdiv {
+border-left: 1px black solid;
+border-bottom: 1px black solid;
+position : fixed;
+width: 600px;
+height: 600px;
+float: right;
+margin-top: 115px;
+background-color: #272727;
+display: none;
+}
 
-        .helpcontent {
-         display: none;
-         padding 10dp;
-        }
+#helpbtn {
+ position: fixed;
+}
+    
+.helptext {
+ text-decoration-color: white;
+color: white;
+font-style: italic;
+padding-bottom: 16dp;
+}
+    
+#filenamelist{
+padding: 0px;    
+}
 
-        #filename_1{
-         color: "white";   
-        }
-        
+#helpList {
+ padding: 20px;   
+}
+
+.helpcontent {
+ display: none;
+ padding 10dp;
+}
+
+#filename_1{
+ color: "white";   
+}
+
