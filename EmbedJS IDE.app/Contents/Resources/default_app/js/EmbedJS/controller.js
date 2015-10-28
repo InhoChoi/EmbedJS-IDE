@@ -2,7 +2,7 @@ var ipc = require('ipc');
 var filename = null;
 var filepath = null;
 var data = null;
-var currentFileNumber=0;
+var currentFileNumber = 0;
 var fileContentList = {};
 // // buttons
 // var btAbout = document.getElementById("about");
@@ -39,11 +39,11 @@ function onNew() {
     }
     changeColorAllFilenames();
     insertFileList("untitled");
-    
+
 }
 //Load Button onClick
 function onLoad() {
-    fileContentList[currentFileNumber]=editor.getValue();
+    fileContentList[currentFileNumber] = editor.getValue();
     ipc.send('onLoad', editor.getValue());
 }
 
@@ -115,70 +115,72 @@ ipc.on("onUploading", function(arg) {
 ipc.on("onUploaded", function(arg) {
     var btUpload = document.getElementById("upload");
     btUpload.textContent = "업로드 완료";
-    setTimeout(function(){
+    setTimeout(function() {
         btUpload.textContent = "업로드";
-    },3000);
+    }, 3000);
 });
 
 //범준
 function onHelp(id) {
-   var obj = document.getElementById(id);
-    if( obj.style.display === 'block' ){ 
+    var obj = document.getElementById(id);
+    if (obj.style.display === 'block') {
         obj.style.display = 'none';
-    } else { 
-        obj.style.display = 'block';    
-    }    
+    } else {
+        obj.style.display = 'block';
+    }
 }
 
-function openHelpContent(id){
-   var parent = document.getElementById(id);
+function openHelpContent(id) {
+    var parent = document.getElementById(id);
     var obj = parent.firstChild.nextSibling;
     console.log(obj.nodeName);
-     if( obj.style.display == 'block' ){ 
+    if (obj.style.display == 'block') {
         obj.style.display = 'none';
-    } else { 
-        obj.style.display = 'block';    
-    }  
+    } else {
+        obj.style.display = 'block';
+    }
 }
 
 function changeFile(id) {
     console.log(fileContentList);
-  var obj = document.getElementById(id);
+    var obj = document.getElementById(id);
     changeColorAllFilenames();
-    obj.style.color ="white";
+    obj.style.color = "white";
     var i = id.split("_");
     fileContentList[currentFileNumber] = editor.getValue();
-    editor.setValue(fileContentList[(i[1])-1]);
+    editor.setValue(fileContentList[(i[1]) - 1]);
     currentFileNumber = i;
 }
 
-function insertFileList(filename){
+function insertFileList(filename) {
     var obj = document.getElementById("filenamelist");
     var newLi = document.createElement("li");
     var newA = document.createElement("a");
     newA.textContent = filename;
-    newA.onclick = function(){changeFile(newA.getAttribute("id"));};
-    newA.setAttribute("id","filename_"+(obj.childElementCount+1));
+    newA.onclick = function() {
+        changeFile(newA.getAttribute("id"));
+    };
+    newA.setAttribute("id", "filename_" + (obj.childElementCount + 1));
     currentFileNumber = obj.childElementCount;
-    console.log(currentFileNumber+":"+fileContentList);
+    console.log(currentFileNumber + ":" + fileContentList);
     newA.style.color = "white";
     newLi.appendChild(newA);
     changeColorAllFilenames();
     obj.appendChild(newLi);
- 
+
 }
 
-function changeColorAllFilenames(){
-   var obj = document.getElementById("filenamelist");
-   var counts = obj.childElementCount;
-   var i = 0;
+function changeColorAllFilenames() {
+    var obj = document.getElementById("filenamelist");
+    var counts = obj.childElementCount;
+    var i = 0;
     console.log(counts);
-   while(counts>i){
-       i++;
-       var node = document.getElementById("filename_"+i);
-       console.log(node);
-       node.style.color = "#4b4b4b";
-   
-   }
-    
+    while (counts > i) {
+        i++;
+        var node = document.getElementById("filename_" + i);
+        console.log(node);
+        node.style.color = "#4b4b4b";
+
+    }
+
 }
