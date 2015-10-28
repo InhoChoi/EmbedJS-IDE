@@ -178,9 +178,9 @@ ipc.on('onUpload', function(event, arg) {
             upload(filepath, function(err, result) {
                 if (result['stderr'] != '') {
                     dialog.showMessageBox({
-                        type: "error",
+                        type: "info",
                         title: "About",
-                        message: "Error",
+                        message: "업로드 결과",
                         detail: result['stderr'],
                         buttons: ['close']
                     }, function(response) {});
@@ -201,9 +201,9 @@ ipc.on('onUpload', function(event, arg) {
                 upload(filepath, function(err, result) {
                     if (result['stderr'] != '') {
                         dialog.showMessageBox({
-                            type: "error",
+                            type: "info",
                             title: "About",
-                            message: "Error",
+                            message: "업로드 결과",
                             detail: result['stderr'],
                             buttons: ['close']
                         }, function(response) {});
