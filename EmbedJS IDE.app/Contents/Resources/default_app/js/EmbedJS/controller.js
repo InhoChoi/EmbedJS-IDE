@@ -2,7 +2,8 @@ var ipc = require('ipc');
 var filename = null;
 var filepath = null;
 var data = null;
-
+var currentFileNumber=0;
+var fileContentList = {};
 
 // // buttons
 // var btAbout = document.getElementById("about");
@@ -37,6 +38,9 @@ function onNew() {
         filename = null;
         document.title = "EmbedJS IDE version 0.1";
     }
+     changeColorAllFilenames();
+    insertFileList("untitled");
+
 }
 //Load Button onClick
 function onLoad() {
@@ -50,6 +54,8 @@ function onLoad() {
         'data' : editor.getValue(),
         'modified' : modified
     }
+      fileContentList[currentFileNumber]=editor.getValue();
+ 
     ipc.send('onLoad', arg);
 }
 
@@ -100,6 +106,8 @@ ipc.on("onLoaded", function(arg) {
     editor.setValue(data);
     editor.gotoLine(1);
     document.title = filepath + " | EmbedJS IDE version 0.1";
+     insertFileList(filename);
+
 });
 
 //Save Event 세이브가 완료되었을 경우
@@ -123,3 +131,70 @@ ipc.on("onUploaded", function(arg) {
         btUpload.textContent = "업로드";
     },3000);
 });
+
+
+//범준
+function onHelp(id) {
+   var obj = document.getElementById(id);
+    if( obj.style.display === 'block' ){ 
+        obj.style.display = 'none';
+    } else { 
+        obj.style.display = 'block';    
+    }    
+}
+
+function openHelpContent(id){
+   var parent = document.getElementById(id);
+    var obj = parent.firstChild.nextSibling;
+    console.log(obj.nodeName);
+     if( obj.style.display == 'block' ){ 
+        obj.style.display = 'none';
+    } else { 
+        obj.style.display = 'block';    
+    }  
+}
+
+function changeFile(id) {
+    console.log(fileContentList);
+  var obj = document.getElementById(id);
+    changeColorAllFilenames();
+    obj.style.color ="white";
+    var i = id.split("_");
+    fileContentList[currentFileNumber] = editor.getValue();
+    currentFileNumber = i[1]-1;
+    editor.setValue(fileContentList[currentFileNumber]);
+   
+}
+
+function insertFileList(filename){
+    var obj = document.getElementById("filenamelist");
+    var newLi = document.createElement("li");
+    var newA = document.createElement("a");
+    newA.textContent = filename;
+    newA.onclick = function(){changeFile(newA.getAttribute("id"));};
+    newA.setAttribute("id","filename_"+(obj.childElementCount+1));
+    currentFileNumber = obj.childElementCount;
+    console.log(currentFileNumber+":"+fileContentList);
+    newA.style.color = "white";
+    newLi.appendChild(newA);
+    changeColorAllFilenames();
+    obj.appendChild(newLi);
+ 
+}
+
+function changeColorAllFilenames(){
+   var obj = document.getElementById("filenamelist");
+   var counts = obj.childElementCount;
+   var i = 0;
+    console.log(counts);
+   while(counts>i){
+       i++;
+       var node = document.getElementById("filename_"+i);
+       console.log(node);
+       node.style.color = "#4b4b4b";
+   
+   }
+    
+}
+
+
