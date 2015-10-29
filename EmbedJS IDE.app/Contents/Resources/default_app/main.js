@@ -12,8 +12,7 @@ var mainWindow = null;
 var aboutWindow = null;
 
 // 모든 창이 닫히면 어플리케이션 종료.
-app.on('window-all-closed', function() 
-{
+app.on('window-all-closed', function() {
     app.quit();
 });
 
@@ -85,4 +84,3 @@ app.on('ready', function() {
     }];
     Menu.setApplicationMenu(Menu.buildFromTemplate(template));
 });
-
