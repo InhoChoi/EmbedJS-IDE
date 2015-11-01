@@ -63,3 +63,25 @@
          color: "white";   
         }
         
+        .deletefile{
+         position: absolute;
+         width: 15px;
+         height: 15px;
+            background-size: cover;
+            background-color: white;
+            padding-right: 5px;
+            margin-top: 17px;
+            background-image: url('ximage.gif');
+            z-index: 500;
+        }
+
+        .filename{
+         margin-left: 5px;
+            padding-left: 0px;
+        }
+
+
+        #tabDiv{
+          display: block;
+            
+        }

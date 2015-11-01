@@ -21,25 +21,25 @@ function onAbout() {
 
 //NEW Buuton onClick
 function onNew() {
-    if (document.title[0] == '*') {
-        var arg = {
-            'name': filename,
-            'path': filepath,
-            'data': editor.getValue()
-        };
-        ipc.sendSync('onNew', arg);
-        editor.setValue("");
-        filepath = null;
-        filename = null;
-        document.title = "EmbedJS IDE version 0.1";
-    } else {
-        editor.setValue("");
-        filepath = null;
-        filename = null;
-        document.title = "EmbedJS IDE version 0.1";
-    }
-     changeColorAllFilenames();
-    insertFileList("untitled");
+//    if (document.title[0] == '*') {
+//        var arg = {
+//            'name': filename,
+//            'path': filepath,
+//            'data': editor.getValue()
+//        };
+//        ipc.sendSync('onNew', arg);
+//        filepath = null;
+//        filename = null;
+//        document.title = "EmbedJS IDE version 0.1";
+//    } else {
+//        filepath = null;
+//        filename = null;
+//        document.title = "EmbedJS IDE version 0.1";
+//       
+//    }
+      changeColorAllFilenames();
+    insertFileList("untitled.js");
+    editor.setValue("");
 
 }
 //Load Button onClick
@@ -54,14 +54,14 @@ function onLoad() {
         'data' : editor.getValue(),
         'modified' : modified
     }
-      fileContentList[currentFileNumber]=editor.getValue();
- 
+    
+      
     ipc.send('onLoad', arg);
 }
 
 //Save Button onClick
 function onSave() {
-    if (filename != null && filepath != null) {
+    if ((fileContentList[currentFileNumber].name != null && ileContentList[currentFileNumber].path != null)||(fileContentList[currentFileNumber].name != undefined && ileContentList[currentFileNumber].path != undefined)) {
         var arg = {
             'name': filename,
             'path': filepath,
@@ -102,19 +102,24 @@ ipc.on("onLoaded", function(arg) {
     filepath = arg.path;
     filename = arg.name;
     data = arg.data;
-
+ insertFileList(filename,arg);
     editor.setValue(data);
     editor.gotoLine(1);
     document.title = filepath + " | EmbedJS IDE version 0.1";
-     insertFileList(filename);
-
+//     insertFileList(filename);
+    console.log(arg);
+       fileContentList[currentFileNumber] = ArgumentInit(arg.path,arg.name,editor.getValue(),true);
+       
 });
 
 //Save Event 세이브가 완료되었을 경우
 ipc.on("onSaved", function(arg) {
     filepath = arg.path;
     filename = arg.name;
+    console.log("saved");
     document.title = filepath + " | EmbedJS IDE version 0.1";
+    fileContentList[currentFileNumber] = ArgumentInit(arg.path,arg.name,editor.getValue(),true);
+    changeTabName(fileContentList[currentFileNumber]);
 });
 
 //Uploading Event 업로드 진행중일경우
@@ -160,9 +165,10 @@ function changeFile(id) {
     changeColorAllFilenames();
     obj.style.color ="white";
     var i = id.split("_");
-    fileContentList[currentFileNumber] = editor.getValue();
+    ////
+    setData();
     currentFileNumber = i[1]-1;
-    editor.setValue(fileContentList[currentFileNumber]);
+    editor.setValue(fileContentList[currentFileNumber].data);
    
 }
 
@@ -170,13 +176,20 @@ function insertFileList(filename){
     var obj = document.getElementById("filenamelist");
     var newLi = document.createElement("li");
     var newA = document.createElement("a");
+    var newDiv = document.createElement("div");
+    newDiv.setAttribute("class","deletefile");
+    newDiv.setAttribute("id","deletefile_"+(obj.childElementCount+1));
+    newDiv.onclick = function(){deleteTabFile(newDiv.getAttribute("id"));};
     newA.textContent = filename;
     newA.onclick = function(){changeFile(newA.getAttribute("id"));};
     newA.setAttribute("id","filename_"+(obj.childElementCount+1));
+    setData();
     currentFileNumber = obj.childElementCount;
     console.log(currentFileNumber+":"+fileContentList);
     newA.style.color = "white";
+    newLi.appendChild(newDiv);
     newLi.appendChild(newA);
+    newLi.setAttribute("id","tabFileLine_"+(obj.childElementCount+1));
     changeColorAllFilenames();
     obj.appendChild(newLi);
  
@@ -198,3 +211,39 @@ function changeColorAllFilenames(){
 }
 
 
+function ArgumentInit(filepath, filename, data, modified,position) {
+    var arg = {
+        'name': filename,
+        'path': filepath,
+        'data': data,
+        'modified': modified,
+        'position' : position
+    };
+    return arg;
+}
+
+function setData(){
+    console.log("currentnumber : " + currentFileNumber+"data:"+ editor.getValue());
+ if(fileContentList[currentFileNumber] === undefined || fileContentList[currentFileNumber] ===null){
+        fileContentList[currentFileNumber] = ArgumentInit(null,null,editor.getValue(),false);
+        
+    }else{
+         fileContentList[currentFileNumber].data=editor.getValue();
+        
+    }  
+    console.log(fileContentList);
+}
+
+function changeTabName(arg){
+     var obj = document.getElementById("filename_"+(currentFileNumber+1));
+    
+    obj.text = arg.name;
+
+    
+}
+
+function deleteTabFile(id){
+  var i = id.split("_");
+  var obj = document.getElementById("tabFileLine_"+i[1]);
+    obj.style.display ="none";
+}
