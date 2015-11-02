@@ -61,7 +61,7 @@ function onLoad() {
 
 //Save Button onClick
 function onSave() {
-    if ((fileContentList[currentFileNumber].name != null && ileContentList[currentFileNumber].path != null)||(fileContentList[currentFileNumber].name != undefined && ileContentList[currentFileNumber].path != undefined)) {
+    if ((typeof(fileContentList[currentFileNumber].name) != undefined && typeof(fileContentList[currentFileNumber].path) != undefined)||(fileContentList[currentFileNumber].name != null && ileContentList[currentFileNumber].path != null)) {
         var arg = {
             'name': fileContentList[currentFileNumber].name,
             'path': fileContentList[currentFileNumber].path,
@@ -80,7 +80,7 @@ function onSave() {
 
 //Upload Button onClick
 function onUpload() {
-    if ((fileContentList[currentFileNumber].name != null && ileContentList[currentFileNumber].path != null)||(fileContentList[currentFileNumber].name != undefined && ileContentList[currentFileNumber].path != undefined)) {
+    if ((typeof(fileContentList[currentFileNumber].name) != undefined && typeof(fileContentList[currentFileNumber].path) != undefined)||(fileContentList[currentFileNumber].name != null && ileContentList[currentFileNumber].path != null)) {
         var arg = {
             'name': fileContentList[currentFileNumber].name,
             'path': fileContentList[currentFileNumber].path,
@@ -257,8 +257,16 @@ function deleteTabFile(id){
     if(currentFileNumber == i[1]-1 ){
         count = 0;
         count = getNotHideLine(i[1]);
-        console.log(count);
+ 
+        if(count==0){
+            editor.setValue("");
+           var obj = document.getElementById("tabDiv");
+           obj.style.display = "none";
+        }else{
+        
+        
        changeFile("filename_"+count);
+        }
     }
     
 }
@@ -268,6 +276,7 @@ function getNotHideLine(count){
  var obj = document.getElementById("tabFileLine_"+count);
     console.log("count"+count);
     console.log(obj.style.display);
+    try{
     if(obj.style.display === "none"){
         return getNotHideLine(count-1);
     }else{
@@ -275,6 +284,52 @@ function getNotHideLine(count){
         
      return count;
     }
+    }catch(e){
+        console.log("catch1");
+        return getNotHideLine2(count);
+        
+    }
+    
+}
+function getNotHideLine2(count){
+ var obj = document.getElementById("tabFileLine_"+count);
+    console.log("counts"+count);
+//    console.log(obj.style.display);
+   
+    var obj2   =document.getElementById("filenamelist");
+     
+    if(count<=obj2.childElementCount){
+      if(obj.style.display === "none"){
+          count++;
+        return getNotHideLine2(count);
+    }else{       
+     return count;
+    }
+    
+    }else{
+         return 0;
+        
+    }
+    
+    
+    
+    
+    
+//       try{
+//    if(obj.style.display === "none"){
+//        return getNotHideLine2((count+1));
+//    }else{
+//    
+//        
+//     return count;
+//    }
+//    }catch(e){
+//        console.log("catch2");
+//        return 0;
+//        
+//    } 
+        
+    
     
 }
 
