@@ -63,8 +63,8 @@ function onLoad() {
 function onSave() {
     if ((fileContentList[currentFileNumber].name != null && ileContentList[currentFileNumber].path != null)||(fileContentList[currentFileNumber].name != undefined && ileContentList[currentFileNumber].path != undefined)) {
         var arg = {
-            'name': filename,
-            'path': filepath,
+            'name': fileContentList[currentFileNumber].name,
+            'path': fileContentList[currentFileNumber].path,
             'data': editor.getValue()
         };
         ipc.send('onSave', arg);
@@ -80,10 +80,10 @@ function onSave() {
 
 //Upload Button onClick
 function onUpload() {
-    if (filename != null && filepath != null) {
+    if ((fileContentList[currentFileNumber].name != null && ileContentList[currentFileNumber].path != null)||(fileContentList[currentFileNumber].name != undefined && ileContentList[currentFileNumber].path != undefined)) {
         var arg = {
-            'name': filename,
-            'path': filepath,
+            'name': fileContentList[currentFileNumber].name,
+            'path': fileContentList[currentFileNumber].path,
             'data': editor.getValue()
         };
         ipc.send('onUpload', arg);
@@ -160,6 +160,7 @@ function openHelpContent(id){
 }
 
 function changeFile(id) {
+    console.log(id);
     console.log(fileContentList);
   var obj = document.getElementById(id);
     changeColorAllFilenames();
@@ -169,7 +170,12 @@ function changeFile(id) {
     setData();
     currentFileNumber = i[1]-1;
     editor.setValue(fileContentList[currentFileNumber].data);
-   
+    if(fileContentList[currentFileNumber].filepath == "" || fileContentList[currentFileNumber].filepath ==null||fileContentList[currentFileNumber].filepath == undefined){
+        document.title = "Untitled.js | EmbedJS IDE version 0.1";
+    }else{
+ document.title = filepath + " | EmbedJS IDE version 0.1";        
+    }
+
 }
 
 function insertFileList(filename){
@@ -216,11 +222,12 @@ function ArgumentInit(filepath, filename, data, modified,position) {
         'name': filename,
         'path': filepath,
         'data': data,
-        'modified': modified,
+        'isSaved': modified,
         'position' : position
     };
     return arg;
 }
+
 
 function setData(){
     console.log("currentnumber : " + currentFileNumber+"data:"+ editor.getValue());
@@ -243,7 +250,31 @@ function changeTabName(arg){
 }
 
 function deleteTabFile(id){
-  var i = id.split("_");
+       var i = id.split("_");
   var obj = document.getElementById("tabFileLine_"+i[1]);
     obj.style.display ="none";
+    console.log("cu"+currentFileNumber+"id:"+id);
+    if(currentFileNumber == i[1]-1 ){
+        count = 0;
+        count = getNotHideLine(i[1]);
+        console.log(count);
+       changeFile("filename_"+count);
+    }
+    
 }
+
+
+function getNotHideLine(count){
+ var obj = document.getElementById("tabFileLine_"+count);
+    console.log("count"+count);
+    console.log(obj.style.display);
+    if(obj.style.display === "none"){
+        return getNotHideLine(count-1);
+    }else{
+    
+        
+     return count;
+    }
+    
+}
+
