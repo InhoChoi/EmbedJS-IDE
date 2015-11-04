@@ -2,7 +2,7 @@ var ipc = require('ipc');
 var filename = null;
 var filepath = null;
 var data = null;
-var currentFileNumber=0;
+var currentFileNumber = 0;
 var fileContentList = {};
 
 // // buttons
@@ -21,23 +21,23 @@ function onAbout() {
 
 //NEW Buuton onClick
 function onNew() {
-//    if (document.title[0] == '*') {
-//        var arg = {
-//            'name': filename,
-//            'path': filepath,
-//            'data': editor.getValue()
-//        };
-//        ipc.sendSync('onNew', arg);
-//        filepath = null;
-//        filename = null;
-//        document.title = "EmbedJS IDE version 0.1";
-//    } else {
-//        filepath = null;
-//        filename = null;
-//        document.title = "EmbedJS IDE version 0.1";
-//       
-//    }
-      changeColorAllFilenames();
+    //    if (document.title[0] == '*') {
+    //        var arg = {
+    //            'name': filename,
+    //            'path': filepath,
+    //            'data': editor.getValue()
+    //        };
+    //        ipc.sendSync('onNew', arg);
+    //        filepath = null;
+    //        filename = null;
+    //        document.title = "EmbedJS IDE version 0.1";
+    //    } else {
+    //        filepath = null;
+    //        filename = null;
+    //        document.title = "EmbedJS IDE version 0.1";
+    //       
+    //    }
+    changeColorAllFilenames();
     insertFileList("untitled.js");
     editor.setValue("");
 
@@ -45,23 +45,23 @@ function onNew() {
 //Load Button onClick
 function onLoad() {
     var modified = false;
-    if(document.title[0] == '*'){
+    if (document.title[0] == '*') {
         modified = true;
     }
     var arg = {
-        'name' : filename,
-        'path' : filepath,
-        'data' : editor.getValue(),
-        'modified' : modified
+        'name': filename,
+        'path': filepath,
+        'data': editor.getValue(),
+        'modified': modified
     }
-    
-      
+
+
     ipc.send('onLoad', arg);
 }
 
 //Save Button onClick
 function onSave() {
-    if ((typeof(fileContentList[currentFileNumber].name) != undefined && typeof(fileContentList[currentFileNumber].path) != undefined)||(fileContentList[currentFileNumber].name != null && ileContentList[currentFileNumber].path != null)) {
+    if ((typeof(fileContentList[currentFileNumber].name) != undefined && typeof(fileContentList[currentFileNumber].path) != undefined) || (fileContentList[currentFileNumber].name != null && ileContentList[currentFileNumber].path != null)) {
         var arg = {
             'name': fileContentList[currentFileNumber].name,
             'path': fileContentList[currentFileNumber].path,
@@ -80,7 +80,7 @@ function onSave() {
 
 //Upload Button onClick
 function onUpload() {
-    if ((typeof(fileContentList[currentFileNumber].name) != undefined && typeof(fileContentList[currentFileNumber].path) != undefined)||(fileContentList[currentFileNumber].name != null && ileContentList[currentFileNumber].path != null)) {
+    if ((typeof(fileContentList[currentFileNumber].name) != undefined && typeof(fileContentList[currentFileNumber].path) != undefined) || (fileContentList[currentFileNumber].name != null && ileContentList[currentFileNumber].path != null)) {
         var arg = {
             'name': fileContentList[currentFileNumber].name,
             'path': fileContentList[currentFileNumber].path,
@@ -102,14 +102,14 @@ ipc.on("onLoaded", function(arg) {
     filepath = arg.path;
     filename = arg.name;
     data = arg.data;
- insertFileList(filename,arg);
+    insertFileList(filename, arg);
     editor.setValue(data);
     editor.gotoLine(1);
     document.title = filepath + " | EmbedJS IDE version 0.1";
-//     insertFileList(filename);
+    //     insertFileList(filename);
     console.log(arg);
-       fileContentList[currentFileNumber] = ArgumentInit(arg.path,arg.name,editor.getValue(),true);
-       
+    fileContentList[currentFileNumber] = ArgumentInit(arg.path, arg.name, editor.getValue(), true);
+
 });
 
 //Save Event 세이브가 완료되었을 경우
@@ -118,7 +118,7 @@ ipc.on("onSaved", function(arg) {
     filename = arg.name;
     console.log("saved");
     document.title = filepath + " | EmbedJS IDE version 0.1";
-    fileContentList[currentFileNumber] = ArgumentInit(arg.path,arg.name,editor.getValue(),true);
+    fileContentList[currentFileNumber] = ArgumentInit(arg.path, arg.name, editor.getValue(), true);
     changeTabName(fileContentList[currentFileNumber]);
 });
 
@@ -132,204 +132,208 @@ ipc.on("onUploading", function(arg) {
 ipc.on("onUploaded", function(arg) {
     var btUpload = document.getElementById("upload");
     btUpload.textContent = "업로드 완료";
-    setTimeout(function(){
+    setTimeout(function() {
         btUpload.textContent = "업로드";
-    },3000);
+    }, 3000);
 });
 
 
 //범준
 function onHelp(id) {
-   var obj = document.getElementById(id);
-    if( obj.style.display === 'block' ){ 
+    var obj = document.getElementById(id);
+    if (obj.style.display === 'block') {
         obj.style.display = 'none';
-    } else { 
-        obj.style.display = 'block';    
-    }    
+    } else {
+        obj.style.display = 'block';
+    }
 }
 
-function openHelpContent(id){
-   var parent = document.getElementById(id);
+function openHelpContent(id) {
+    var parent = document.getElementById(id);
     var obj = parent.firstChild.nextSibling;
     console.log(obj.nodeName);
-     if( obj.style.display == 'block' ){ 
+    if (obj.style.display == 'block') {
         obj.style.display = 'none';
-    } else { 
-        obj.style.display = 'block';    
-    }  
+    } else {
+        obj.style.display = 'block';
+    }
 }
 
 function changeFile(id) {
     console.log(id);
     console.log(fileContentList);
-  var obj = document.getElementById(id);
+    var obj = document.getElementById(id);
     changeColorAllFilenames();
-    obj.style.color ="white";
+    obj.style.color = "white";
     var i = id.split("_");
     ////
     setData();
-    currentFileNumber = i[1]-1;
+    currentFileNumber = i[1] - 1;
     editor.setValue(fileContentList[currentFileNumber].data);
-    if(fileContentList[currentFileNumber].filepath == "" || fileContentList[currentFileNumber].filepath ==null||fileContentList[currentFileNumber].filepath == undefined){
+    if (fileContentList[currentFileNumber].filepath == "" || fileContentList[currentFileNumber].filepath == null || fileContentList[currentFileNumber].filepath == undefined) {
         document.title = "Untitled.js | EmbedJS IDE version 0.1";
-    }else{
- document.title = filepath + " | EmbedJS IDE version 0.1";        
+    } else {
+        document.title = filepath + " | EmbedJS IDE version 0.1";
     }
 
 }
 
-function insertFileList(filename){
+function insertFileList(filename) {
     var obj = document.getElementById("filenamelist");
     var newLi = document.createElement("li");
     var newA = document.createElement("a");
     var newDiv = document.createElement("div");
-    newDiv.setAttribute("class","deletefile");
-    newDiv.setAttribute("id","deletefile_"+(obj.childElementCount+1));
-    newDiv.onclick = function(){deleteTabFile(newDiv.getAttribute("id"));};
+    newDiv.setAttribute("class", "deletefile");
+    newDiv.setAttribute("id", "deletefile_" + (obj.childElementCount + 1));
+    newDiv.onclick = function() {
+        deleteTabFile(newDiv.getAttribute("id"));
+    };
     newA.textContent = filename;
-    newA.onclick = function(){changeFile(newA.getAttribute("id"));};
-    newA.setAttribute("id","filename_"+(obj.childElementCount+1));
+    newA.onclick = function() {
+        changeFile(newA.getAttribute("id"));
+    };
+    newA.setAttribute("id", "filename_" + (obj.childElementCount + 1));
     setData();
     currentFileNumber = obj.childElementCount;
-    console.log(currentFileNumber+":"+fileContentList);
+    console.log(currentFileNumber + ":" + fileContentList);
     newA.style.color = "white";
     newLi.appendChild(newDiv);
     newLi.appendChild(newA);
-    newLi.setAttribute("id","tabFileLine_"+(obj.childElementCount+1));
+    newLi.setAttribute("id", "tabFileLine_" + (obj.childElementCount + 1));
     changeColorAllFilenames();
     obj.appendChild(newLi);
- 
+
 }
 
-function changeColorAllFilenames(){
-   var obj = document.getElementById("filenamelist");
-   var counts = obj.childElementCount;
-   var i = 0;
+function changeColorAllFilenames() {
+    var obj = document.getElementById("filenamelist");
+    var counts = obj.childElementCount;
+    var i = 0;
     console.log(counts);
-   while(counts>i){
-       i++;
-       var node = document.getElementById("filename_"+i);
-       console.log(node);
-       node.style.color = "#4b4b4b";
-   
-   }
-    
+    while (counts > i) {
+        i++;
+        var node = document.getElementById("filename_" + i);
+        console.log(node);
+        node.style.color = "#4b4b4b";
+
+    }
+
 }
 
 
-function ArgumentInit(filepath, filename, data, modified,position) {
+function ArgumentInit(filepath, filename, data, modified, position) {
     var arg = {
         'name': filename,
         'path': filepath,
         'data': data,
         'isSaved': modified,
-        'position' : position
+        'position': position
     };
     return arg;
 }
 
 
-function setData(){
-    console.log("currentnumber : " + currentFileNumber+"data:"+ editor.getValue());
- if(fileContentList[currentFileNumber] === undefined || fileContentList[currentFileNumber] ===null){
-        fileContentList[currentFileNumber] = ArgumentInit(null,null,editor.getValue(),false);
-        
-    }else{
-         fileContentList[currentFileNumber].data=editor.getValue();
-        
-    }  
+function setData() {
+    console.log("currentnumber : " + currentFileNumber + "data:" + editor.getValue());
+    if (fileContentList[currentFileNumber] === undefined || fileContentList[currentFileNumber] === null) {
+        fileContentList[currentFileNumber] = ArgumentInit(null, null, editor.getValue(), false);
+
+    } else {
+        fileContentList[currentFileNumber].data = editor.getValue();
+
+    }
     console.log(fileContentList);
 }
 
-function changeTabName(arg){
-     var obj = document.getElementById("filename_"+(currentFileNumber+1));
-    
+function changeTabName(arg) {
+    var obj = document.getElementById("filename_" + (currentFileNumber + 1));
+
     obj.text = arg.name;
 
-    
+
 }
 
-function deleteTabFile(id){
-       var i = id.split("_");
-  var obj = document.getElementById("tabFileLine_"+i[1]);
-    obj.style.display ="none";
-    console.log("cu"+currentFileNumber+"id:"+id);
-    if(currentFileNumber == i[1]-1 ){
+function deleteTabFile(id) {
+    var i = id.split("_");
+    var obj = document.getElementById("tabFileLine_" + i[1]);
+    obj.style.display = "none";
+    console.log("cu" + currentFileNumber + "id:" + id);
+    if (currentFileNumber == i[1] - 1) {
         count = 0;
         count = getNotHideLine(i[1]);
- 
-        if(count==0){
+
+        if (count == 0) {
             editor.setValue("");
-           var obj = document.getElementById("tabDiv");
-           obj.style.display = "none";
-        }else{
-        
-        
-       changeFile("filename_"+count);
+            var obj = document.getElementById("tabDiv");
+            obj.style.display = "none";
+        } else {
+
+
+            changeFile("filename_" + count);
         }
     }
-    
+
 }
 
 
-function getNotHideLine(count){
- var obj = document.getElementById("tabFileLine_"+count);
-    console.log("count"+count);
+function getNotHideLine(count) {
+    var obj = document.getElementById("tabFileLine_" + count);
+    console.log("count" + count);
     console.log(obj.style.display);
-    try{
-    if(obj.style.display === "none"){
-        return getNotHideLine(count-1);
-    }else{
-    
-        
-     return count;
-    }
-    }catch(e){
+    try {
+        if (obj.style.display === "none") {
+            return getNotHideLine(count - 1);
+        } else {
+
+
+            return count;
+        }
+    } catch (e) {
         console.log("catch1");
         return getNotHideLine2(count);
-        
+
     }
-    
-}
-function getNotHideLine2(count){
- var obj = document.getElementById("tabFileLine_"+count);
-    console.log("counts"+count);
-//    console.log(obj.style.display);
-   
-    var obj2   =document.getElementById("filenamelist");
-     
-    if(count<=obj2.childElementCount){
-      if(obj.style.display === "none"){
-          count++;
-        return getNotHideLine2(count);
-    }else{       
-     return count;
-    }
-    
-    }else{
-         return 0;
-        
-    }
-    
-    
-    
-    
-    
-//       try{
-//    if(obj.style.display === "none"){
-//        return getNotHideLine2((count+1));
-//    }else{
-//    
-//        
-//     return count;
-//    }
-//    }catch(e){
-//        console.log("catch2");
-//        return 0;
-//        
-//    } 
-        
-    
-    
+
 }
 
+function getNotHideLine2(count) {
+    var obj = document.getElementById("tabFileLine_" + count);
+    console.log("counts" + count);
+    //    console.log(obj.style.display);
+
+    var obj2 = document.getElementById("filenamelist");
+
+    if (count <= obj2.childElementCount) {
+        if (obj.style.display === "none") {
+            count++;
+            return getNotHideLine2(count);
+        } else {
+            return count;
+        }
+
+    } else {
+        return 0;
+
+    }
+
+
+
+
+
+    //       try{
+    //    if(obj.style.display === "none"){
+    //        return getNotHideLine2((count+1));
+    //    }else{
+    //    
+    //        
+    //     return count;
+    //    }
+    //    }catch(e){
+    //        console.log("catch2");
+    //        return 0;
+    //        
+    //    } 
+
+
+
+}
