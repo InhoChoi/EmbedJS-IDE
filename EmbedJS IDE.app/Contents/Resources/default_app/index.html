@@ -18,10 +18,9 @@
         <!-- Editor ace JavaScript -->
         <script src="js/ace/ace.js" type="text/javascript" charset="utf-8"></script>
         <script src="js/ace/ext-language_tools.js"></script>
-
         <!-- Controller JavaScript -->
         <script src="js/EmbedJS/controller.js" type="text/javascript"></script>
-         
+        
         <link href="css/main.css" rel="stylesheet">
         <style type="text/css" media="screen">
         
@@ -52,50 +51,52 @@
                         <li>
                             <button id="upload" class="btn btn-primary" type="button" onclick="onUpload()">업로드</button>
                         </li>
+                        <li>
+                            <button id="about" type="button" class="btn btn-info" onclick="">Help</button>
+                        </li>
                     </ul>
                 </div>
-                <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-2">
+                <!--                 <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-2">
                     <ul class="nav navbar-nav">
                         <li>
                             <button id="helpbtn" type="button" class="btn btn-info" onclick="onHelp('helpdiv')">help</button>
                         </li>
                     </ul>
-                      <div id="helpdiv">
-                    <ul id="helpList">
-                        <li class="helptext" id="helptxt1" onclick="openHelpContent('helptxt1')">
-                            예제 1
-                            <p class="helpcontent">djsjdsjdjdjdjdjdjdssjkdhfkjqhfkwqjhf</p>
-                        </li>
-                        <li class="helptext" id="helptxt2" onclick="openHelpContent('helptxt2')">
-                            예제 1
-                           <p class="helpcontent">djsjdsjdjdjdjdjdjdssjkdhfkjqhfkwqjhf</p>
-                        </li>
-                        <li class="helptext" id="helptxt3" onclick="openHelpContent('helptxt3')">
-                            예제 1
-                         <p class="helpcontent">djsjdsjdjdjdjdjdjdssjkdhfkjqhfkwqjhf</p
+                    <div id="helpdiv">
+                        <ul id="helpList">
+                            <li class="helptext" id="helptxt1" onclick="openHelpContent('helptxt1')">
+                                예제 1
+                                <p class="helpcontent">djsjdsjdjdjdjdjdjdssjkdhfkjqhfkwqjhf</p>
+                            </li>
+                            <li class="helptext" id="helptxt2" onclick="openHelpContent('helptxt2')">
+                                예제 1
+                                <p class="helpcontent">djsjdsjdjdjdjdjdjdssjkdhfkjqhfkwqjhf</p>
+                            </li>
+                            <li class="helptext" id="helptxt3" onclick="openHelpContent('helptxt3')">
+                                예제 1
+                            <p class="helpcontent">djsjdsjdjdjdjdjdjdssjkdhfkjqhfkwqjhf</p
                         </li>
                         <li class="helptext" id="helptxt4" onclick="openHelpContent('helptxt4')">
                             예제 1
-                         <p class="helpcontent">djsjdsjdjdjdjdjdjdssjkdhfkjqhfkwqjhf</p>
+                            <p class="helpcontent">djsjdsjdjdjdjdjdjdssjkdhfkjqhfkwqjhf</p>
                         </li>
                     </ul>
-            </div>
-
-            </div>
-            </div>
-             <div class="container" id="container">
-             <div class="collapse navbar-collapse" id="tabDiv">
+                </div>
+            -->            </div>
+        </div>
+        <div class="container" id="container">
+            <div class="collapse navbar-collapse" id="tabDiv">
                 <ul class="nav navbar-nav" id="filenamelist">
-                  <li id="tabFileLine_1"><div class="deletefile" id="deletefile_1" onclick="deleteTabFile('deletefile_1')"></div><a href="#" onclick="changeFile('filename_1')" id="filename_1" style="color:white" class="filename">untitled.js</a></li>
+                    <li id="tabFileLine_1"><div class="deletefile" id="deletefile_1" onclick="deleteTabFile('deletefile_1')"></div><a href="#" onclick="changeFile('filename_1')" id="filename_1" style="color:white" class="filename">untitled.js</a></li>
                 </ul>
-        </div>
             </div>
-        </nav>
-        <!-- Page Content -->
-        <div class="container">
-            <div id="editor"></div>
-        <script src="js/editor.js" type="text/javascript" charset="utf-8"></script>
         </div>
-        <!-- /.container -->
-    </body>
+    </nav>
+    <!-- Page Content -->
+    <div class="container">
+        <div id="editor"></div>
+        <script src="js/editor.js" type="text/javascript" charset="utf-8"></script>
+    </div>
+    <!-- /.container -->
+</body>
 </html>
