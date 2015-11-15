@@ -61,6 +61,8 @@ function onLoad() {
 
 //Save Button onClick
 function onSave() {
+    
+    try{
     if ((typeof(fileContentList[currentFileNumber].name) != undefined && typeof(fileContentList[currentFileNumber].path) != undefined)||(fileContentList[currentFileNumber].name != null && ileContentList[currentFileNumber].path != null)) {
         var arg = {
             'name': fileContentList[currentFileNumber].name,
@@ -70,6 +72,14 @@ function onSave() {
         ipc.send('onSave', arg);
     } else {
         var arg = {
+            'name': null,
+            'path': null,
+            'data': editor.getValue()
+        }
+        ipc.send('onSave', arg);
+    }
+    }catch(e){
+         var arg = {
             'name': null,
             'path': null,
             'data': editor.getValue()
